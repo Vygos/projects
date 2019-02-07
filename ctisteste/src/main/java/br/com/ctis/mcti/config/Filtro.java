@@ -1,7 +1,10 @@
 package br.com.ctis.mcti.config;
 
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+import br.com.ctis.mcti.model.Usuario;
+import br.com.ctis.mcti.service.ProdutosService;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,6 +21,10 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class Filtro implements Filter{
 
+	private Usuario usuario;
+
+	@Autowired
+	private ProdutosService produtosService;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -27,14 +34,12 @@ public class Filtro implements Filter{
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		//HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-		System.out.println("Requisição: " + httpServletRequest.getHeader("Authorization"));
-
-
-
+		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		String access_token =  httpServletRequest.getHeader("Authorization");
+		access_token = access_token.substring(7);
+		System.out.println("Requisição: " + access_token);
+		//produtosService.retornarUsuarioLogado();
 		chain.doFilter(httpServletRequest, response);
-
-
 	}
 
 	@Override

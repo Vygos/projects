@@ -1,5 +1,6 @@
 package br.com.ctis.mcti.security;
 
+import br.com.ctis.mcti.service.ProdutosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,13 +24,16 @@ public class AppUserDetailsService implements UserDetailsService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private ProdutosService produtosService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
        // Optional<Usuario> usuarioOptional = usuarioRepository.findByUsername(username);
         
         Usuario usuario = usuarioRepository.findByUsername(username);
-        
+        produtosService.atribuirUsuarioLogado(usuario);
         System.out.println(usuario.getNome());
         Set<SimpleGrantedAuthority> autorities = new HashSet<>();
         
